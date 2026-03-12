@@ -1,291 +1,203 @@
 /* ═══════════════════════════════════════════════════════════════
-   PULSE — Website JavaScript
-   Pre-registration, Supabase, Confetti, Animations
+   PULSE — Website JS
+   Supabase pre-registration, confetti, animations
    ═══════════════════════════════════════════════════════════════ */
 
-// ─── Supabase Config ─────────────────────────────────────────
-const SUPABASE_URL = 'https://gqwjorjketqnpwrmcujd.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd2pvcmprZXRxbnB3cm1jdWpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwOTA2MDYsImV4cCI6MjA4NTY2NjYwNn0.LoModGE2IYzfxwgS-rW-1w9vvXn9rdvMYwsW6baQlDM';
+// ─── Supabase ────────────────────────────────────────────────
+const SB_URL = 'https://gqwjorjketqnpwrmcujd.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd2pvcmprZXRxbnB3cm1jdWpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwOTA2MDYsImV4cCI6MjA4NTY2NjYwNn0.LoModGE2IYzfxwgS-rW-1w9vvXn9rdvMYwsW6baQlDM';
 
-let supabase;
-try {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} catch (e) {
-    console.warn('Supabase client failed to init:', e);
-}
+let sb;
+try { sb = window.supabase.createClient(SB_URL, SB_KEY); } catch (e) { console.warn('Supabase init failed', e); }
 
-// ─── Pre-Registration ────────────────────────────────────────
-const preregForm = document.getElementById('preregForm');
-const preregBtn = document.getElementById('preregBtn');
-const preregWrap = document.getElementById('preregWrap');
-const preregSuccess = document.getElementById('preregSuccess');
-const preregEmail = document.getElementById('preregEmail');
-const counterNum = document.getElementById('counterNum');
+// ─── Elements ────────────────────────────────────────────────
+const $ = (s) => document.querySelector(s);
+const form = $('#preregForm');
+const btn = $('#preregBtn');
+const wrap = $('#preregWrap');
+const success = $('#preregSuccess');
+const emailInput = $('#preregEmail');
+const counterEl = $('#counterNum');
 
-// Load signup count on page load
-async function loadSignupCount() {
-    if (!supabase) return;
+// ─── Load Count ──────────────────────────────────────────────
+async function loadCount() {
+    if (!sb) return;
     try {
-        const { count, error } = await supabase
-            .from('preregistrations')
-            .select('*', { count: 'exact', head: true });
-        if (!error && count !== null) {
-            animateCounter(count);
-        }
-    } catch (e) {
-        console.warn('Count fetch failed:', e);
-    }
+        const { count } = await sb.from('preregistrations').select('*', { count: 'exact', head: true });
+        if (count !== null) animateNum(counterEl, count);
+    } catch (e) { /* silent */ }
 }
 
-function animateCounter(target) {
-    const el = counterNum;
+function animateNum(el, target) {
     if (!el) return;
-    const start = parseInt(el.textContent) || 0;
-    const duration = 1200;
-    const startTime = performance.now();
-
-    function tick(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        // Ease out cubic
-        const eased = 1 - Math.pow(1 - progress, 3);
-        el.textContent = Math.round(start + (target - start) * eased);
-        if (progress < 1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
+    const from = parseInt(el.textContent) || 0;
+    const dur = 1000;
+    const t0 = performance.now();
+    (function tick(now) {
+        const p = Math.min((now - t0) / dur, 1);
+        el.textContent = Math.round(from + (target - from) * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(tick);
+    })(t0);
 }
 
-// Handle form submission
-if (preregForm) {
-    preregForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+// ─── Form Submit ─────────────────────────────────────────────
+if (form) form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = emailInput.value.trim().toLowerCase();
+    if (!email) return;
 
-        const email = preregEmail.value.trim().toLowerCase();
-        if (!email) return;
+    btn.classList.add('loading');
+    btn.disabled = true;
 
-        // Show loading
-        preregBtn.classList.add('loading');
-        preregBtn.disabled = true;
+    try {
+        if (!sb) throw new Error('no sb');
 
-        try {
-            if (!supabase) throw new Error('No supabase');
+        const { data: dup } = await sb.from('preregistrations').select('id').eq('email', email).maybeSingle();
+        if (dup) { showSuccess(); return; }
 
-            // Check for duplicate
-            const { data: existing } = await supabase
-                .from('preregistrations')
-                .select('id')
-                .eq('email', email)
-                .maybeSingle();
-
-            if (existing) {
-                // Already registered
-                showSuccess();
-                return;
-            }
-
-            // Insert new registration
-            const { error } = await supabase
-                .from('preregistrations')
-                .insert({
-                    email: email,
-                    source: document.referrer || 'direct',
-                    user_agent: navigator.userAgent.substring(0, 200),
-                });
-
-            if (error) throw error;
-
-            showSuccess();
-            fireConfetti();
-
-            // Update counter
-            const { count } = await supabase
-                .from('preregistrations')
-                .select('*', { count: 'exact', head: true });
-            if (count !== null) animateCounter(count);
-
-        } catch (err) {
-            console.error('Registration error:', err);
-            // Show success anyway if it's a constraint violation (duplicate)
-            if (err.code === '23505') {
-                showSuccess();
-            } else {
-                preregBtn.classList.remove('loading');
-                preregBtn.disabled = false;
-                alert('Something went wrong. Please try again.');
-            }
-        }
-    });
-}
-
-function showSuccess() {
-    if (preregWrap) preregWrap.style.display = 'none';
-    if (preregSuccess) preregSuccess.style.display = 'block';
-
-    // Set up share links
-    const shareText = encodeURIComponent("I just pre-registered for Pulse — an AI fitness & nutrition coach that looks insane 🔥 Check it out: https://gopulse.health");
-    const shareTwitter = document.getElementById('shareTwitter');
-    if (shareTwitter) {
-        shareTwitter.href = `https://twitter.com/intent/tweet?text=${shareText}`;
-    }
-}
-
-// Copy link button
-const shareCopy = document.getElementById('shareCopy');
-if (shareCopy) {
-    shareCopy.addEventListener('click', () => {
-        navigator.clipboard.writeText('https://gopulse.health').then(() => {
-            shareCopy.textContent = '✓ Copied!';
-            setTimeout(() => { shareCopy.textContent = 'Copy Link'; }, 2000);
+        const { error } = await sb.from('preregistrations').insert({
+            email,
+            source: document.referrer || 'direct',
+            user_agent: navigator.userAgent.substring(0, 200),
         });
-    });
-}
+        if (error) throw error;
 
-// ─── Confetti ────────────────────────────────────────────────
-function fireConfetti() {
-    const canvas = document.getElementById('confettiCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+        showSuccess();
+        confetti();
 
-    const colors = ['#111111', '#333333', '#666666', '#3B82F6', '#22C55E', '#F59E0B', '#EF4444', '#8B5CF6'];
-    const particles = [];
+        const { count } = await sb.from('preregistrations').select('*', { count: 'exact', head: true });
+        if (count !== null) animateNum(counterEl, count);
 
-    for (let i = 0; i < 150; i++) {
-        particles.push({
-            x: canvas.width / 2 + (Math.random() - 0.5) * 200,
-            y: canvas.height * 0.4,
-            vx: (Math.random() - 0.5) * 20,
-            vy: -Math.random() * 18 - 5,
-            w: Math.random() * 8 + 4,
-            h: Math.random() * 6 + 3,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            rotation: Math.random() * 360,
-            rotSpeed: (Math.random() - 0.5) * 15,
-            gravity: 0.4 + Math.random() * 0.2,
-            opacity: 1,
-        });
-    }
-
-    let frame = 0;
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        let alive = false;
-
-        particles.forEach(p => {
-            p.vy += p.gravity;
-            p.x += p.vx;
-            p.y += p.vy;
-            p.rotation += p.rotSpeed;
-            p.vx *= 0.99;
-
-            if (frame > 40) p.opacity -= 0.015;
-            if (p.opacity <= 0) return;
-
-            alive = true;
-            ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate(p.rotation * Math.PI / 180);
-            ctx.globalAlpha = Math.max(0, p.opacity);
-            ctx.fillStyle = p.color;
-            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-            ctx.restore();
-        });
-
-        frame++;
-        if (alive && frame < 180) {
-            requestAnimationFrame(draw);
-        } else {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-    }
-    requestAnimationFrame(draw);
-}
-
-// ─── Cycling Headline ────────────────────────────────────────
-const HERO_WORDS = ['Train Smarter.', 'Eat Better.', 'Live Stronger.'];
-let wordIdx = 0;
-const wordEl = document.getElementById('cyclingWord');
-
-if (wordEl) {
-    setInterval(() => {
-        wordIdx = (wordIdx + 1) % HERO_WORDS.length;
-        wordEl.style.opacity = '0';
-        wordEl.style.transform = 'translateY(10px)';
-        setTimeout(() => {
-            wordEl.textContent = HERO_WORDS[wordIdx];
-            wordEl.style.opacity = '1';
-            wordEl.style.transform = 'translateY(0)';
-        }, 300);
-    }, 2500);
-}
-
-// ─── Scroll Animations ──────────────────────────────────────
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-document.querySelectorAll('.anim-in').forEach(el => observer.observe(el));
-
-// ─── Nav Scroll ──────────────────────────────────────────────
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-    if (nav) {
-        nav.classList.toggle('scrolled', window.scrollY > 50);
+    } catch (err) {
+        if (err.code === '23505') { showSuccess(); return; }
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        alert('Something went wrong — please try again.');
     }
 });
 
-// ─── Mobile Menu ─────────────────────────────────────────────
-const mobileToggle = document.getElementById('mobileToggle');
-const navLinks = document.getElementById('navLinks');
-if (mobileToggle && navLinks) {
-    mobileToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => navLinks.classList.remove('open'));
-    });
+function showSuccess() {
+    if (wrap) wrap.style.display = 'none';
+    if (success) success.style.display = 'block';
+    const txt = encodeURIComponent("Just pre-registered for Pulse — an AI fitness & nutrition coach 🔥 https://gopulse.health");
+    const x = $('#shareX');
+    if (x) x.href = `https://twitter.com/intent/tweet?text=${txt}`;
 }
 
-// ─── FAQ Accordion ───────────────────────────────────────────
-document.querySelectorAll('.faq-question').forEach(q => {
+const copyBtn = $('#shareCopy');
+if (copyBtn) copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText('https://gopulse.health').then(() => {
+        copyBtn.textContent = '✓ Copied!';
+        setTimeout(() => copyBtn.textContent = 'Copy Link', 2000);
+    });
+});
+
+// ─── Confetti ────────────────────────────────────────────────
+function confetti() {
+    const c = document.getElementById('confettiCanvas');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    c.width = innerWidth; c.height = innerHeight;
+
+    const cols = ['#0a0a0a','#444','#888','#3B82F6','#22C55E','#F59E0B','#EF4444','#8B5CF6'];
+    const p = Array.from({ length: 140 }, () => ({
+        x: c.width / 2 + (Math.random() - 0.5) * 200,
+        y: c.height * 0.35,
+        vx: (Math.random() - 0.5) * 18,
+        vy: -Math.random() * 16 - 6,
+        w: Math.random() * 8 + 4,
+        h: Math.random() * 5 + 3,
+        col: cols[Math.random() * cols.length | 0],
+        rot: Math.random() * 360,
+        rs: (Math.random() - 0.5) * 14,
+        g: 0.35 + Math.random() * 0.2,
+        o: 1,
+    }));
+
+    let f = 0;
+    (function draw() {
+        ctx.clearRect(0, 0, c.width, c.height);
+        let alive = false;
+        p.forEach(i => {
+            i.vy += i.g; i.x += i.vx; i.y += i.vy; i.rot += i.rs; i.vx *= 0.99;
+            if (f > 35) i.o -= 0.014;
+            if (i.o <= 0) return;
+            alive = true;
+            ctx.save();
+            ctx.translate(i.x, i.y);
+            ctx.rotate(i.rot * Math.PI / 180);
+            ctx.globalAlpha = Math.max(0, i.o);
+            ctx.fillStyle = i.col;
+            ctx.fillRect(-i.w / 2, -i.h / 2, i.w, i.h);
+            ctx.restore();
+        });
+        f++;
+        if (alive && f < 160) requestAnimationFrame(draw);
+        else ctx.clearRect(0, 0, c.width, c.height);
+    })();
+}
+
+// ─── Cycling Headline ────────────────────────────────────────
+const words = ['Train Smarter.', 'Eat Better.', 'Live Stronger.'];
+let wi = 0;
+const wEl = document.getElementById('cycleWord');
+if (wEl) setInterval(() => {
+    wi = (wi + 1) % words.length;
+    wEl.style.opacity = '0';
+    wEl.style.transform = 'translateY(12px)';
+    setTimeout(() => {
+        wEl.textContent = words[wi];
+        wEl.style.opacity = '1';
+        wEl.style.transform = 'translateY(0)';
+    }, 250);
+}, 2500);
+
+// ─── Reveal on Scroll ────────────────────────────────────────
+const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+// ─── Nav Scroll ──────────────────────────────────────────────
+const nav = document.getElementById('nav');
+addEventListener('scroll', () => { if (nav) nav.classList.toggle('scrolled', scrollY > 60); });
+
+// ─── Mobile Menu ─────────────────────────────────────────────
+const hb = document.getElementById('hamburger');
+const nl = document.getElementById('navLinks');
+if (hb && nl) {
+    hb.addEventListener('click', () => nl.classList.toggle('open'));
+    nl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nl.classList.remove('open')));
+}
+
+// ─── FAQ ─────────────────────────────────────────────────────
+document.querySelectorAll('.faq-q').forEach(q => {
     q.addEventListener('click', () => {
         const item = q.closest('.faq-item');
         const wasOpen = item.classList.contains('open');
-        // Close all
         document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-        // Toggle
         if (!wasOpen) item.classList.add('open');
     });
 });
 
-// ─── Stat Counter Animation ──────────────────────────────────
-const statObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const el = entry.target;
-            const target = parseInt(el.dataset.target);
-            const suffix = el.dataset.suffix || '';
-            if (isNaN(target)) return;
-
-            const duration = 1500;
-            const start = performance.now();
-
-            function tick(now) {
-                const progress = Math.min((now - start) / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 3);
-                el.textContent = Math.round(target * eased) + suffix;
-                if (progress < 1) requestAnimationFrame(tick);
-            }
-            requestAnimationFrame(tick);
-            statObserver.unobserve(el);
-        }
+// ─── Stat Counters ───────────────────────────────────────────
+const so = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        const t = parseInt(el.dataset.target);
+        const s = el.dataset.suffix || '';
+        if (isNaN(t)) return;
+        const dur = 1400, t0 = performance.now();
+        (function tick(now) {
+            const p = Math.min((now - t0) / dur, 1);
+            el.textContent = Math.round(t * (1 - Math.pow(1 - p, 3))) + s;
+            if (p < 1) requestAnimationFrame(tick);
+        })(t0);
+        so.unobserve(el);
     });
 }, { threshold: 0.5 });
-
-document.querySelectorAll('.stat-value[data-target]').forEach(el => statObserver.observe(el));
+document.querySelectorAll('.stat-val[data-target]').forEach(el => so.observe(el));
 
 // ─── Init ────────────────────────────────────────────────────
-loadSignupCount();
+loadCount();

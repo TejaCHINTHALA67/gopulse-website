@@ -1,400 +1,347 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pulse — AI Fitness & Nutrition Coach | Train Smarter. Eat Better. Live Stronger.</title>
-    <meta name="description"
-        content="Pulse is your AI-powered fitness companion. Real-time AI voice coaching, snap-to-track nutrition, personalized workout plans, energy balance tracking, gamification, and complete body analytics — all in one app.">
-    <meta name="keywords"
-        content="fitness app, AI coach, workout tracker, nutrition tracking, personal trainer, gym app, meal scanner, voice coaching, calorie tracker, energy balance, body score">
+    <title>Pulse — AI Fitness & Nutrition Coach | Train Smarter. Eat Better.</title>
+    <meta name="description" content="Pulse is your AI-powered fitness companion. Real-time voice coaching, snap-to-track nutrition, personalized workout plans, energy balance, streaks & badges — all in one app.">
+    <meta name="keywords" content="fitness app, AI coach, workout tracker, nutrition tracking, personal trainer, gym app, meal scanner, voice coaching, calorie tracker">
     <meta property="og:title" content="Pulse — AI Fitness & Nutrition Coach">
-    <meta property="og:description"
-        content="Train Smarter. Eat Better. Live Stronger. Your personalized AI fitness companion built for results.">
+    <meta property="og:description" content="Train Smarter. Eat Better. Live Stronger. Your personalized AI fitness companion.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://gopulse.health">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23000'/><text x='50' y='72' font-size='60' font-weight='900' fill='white' text-anchor='middle' font-family='system-ui'>P</text></svg>">
-
-    <!-- Supabase JS CDN -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23000'/><text x='50' y='72' font-size='60' font-weight='900' fill='white' text-anchor='middle' font-family='system-ui'>P</text></svg>">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
-
 <body>
 
-    <!-- NAV -->
-    <nav class="nav" id="nav">
-        <div class="nav-inner">
-            <a href="#" class="nav-logo">
-                <img src="logo.jpg" alt="Pulse" class="nav-logo-img">
-                Pulse
+<!-- ═══ NAV ═══ -->
+<nav class="nav" id="nav">
+    <div class="nav-inner">
+        <a href="#" class="nav-logo">
+            <img src="logo.jpg" alt="Pulse" class="nav-logo-img">
+            Pulse
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how">How It Works</a></li>
+            <li><a href="#why">Why Pulse</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#hero" class="nav-cta">Pre-Register</a></li>
+        </ul>
+        <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="hero">
+    <div class="hero-content">
+        <div class="hero-badge"><span class="dot"></span> Launching Soon</div>
+        <h1 class="hero-title">
+            <span class="cycling" id="cycleWord">Train Smarter.</span>
+        </h1>
+        <p class="hero-sub">Your AI-powered fitness & nutrition coach.<br>Personalized plans. Real-time voice coaching. Snap-to-track meals.</p>
+
+        <!-- Pre-Registration Form -->
+        <div class="prereg" id="preregWrap">
+            <form id="preregForm" class="prereg-form">
+                <div class="prereg-input-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+                    <input type="email" id="preregEmail" placeholder="Enter your email for early access" required autocomplete="email">
+                </div>
+                <button type="submit" class="prereg-btn" id="preregBtn">
+                    <span class="btn-label">Get Early Access</span>
+                    <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    <div class="spinner"></div>
+                </button>
+            </form>
+            <div class="prereg-meta">
+                <span>✓ 100% Free</span>
+                <span>✓ No spam, ever</span>
+                <span>✓ Early access perks</span>
+            </div>
+        </div>
+
+        <!-- Success State -->
+        <div class="prereg-success" id="preregSuccess">
+            <div class="emoji">🎉</div>
+            <h3>You're on the list!</h3>
+            <p>We'll notify you the moment Pulse launches.<br>You'll get <strong>early access + exclusive perks</strong>.</p>
+            <div class="share-row">
+                <a href="#" id="shareX" class="share-btn dark" target="_blank">𝕏 Post</a>
+                <button class="share-btn" id="shareCopy">Copy Link</button>
+            </div>
+        </div>
+
+        <!-- Live Counter -->
+        <div class="counter">
+            <div class="counter-dots">
+                <div class="counter-dot"><img src="logo.jpg" alt="P"></div>
+                <div class="counter-dot" style="background:#3B82F6;">⚡</div>
+                <div class="counter-dot" style="background:#22C55E;">💪</div>
+            </div>
+            <span class="counter-text"><strong id="counterNum">0</strong> people pre-registered</span>
+        </div>
+    </div>
+
+    <div class="hero-image-wrap">
+        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&q=80" alt="Premium gym">
+        <div class="gradient"></div>
+    </div>
+</section>
+
+<!-- ═══ MARQUEE ═══ -->
+<section class="marquee">
+    <div class="marquee-track">
+        <span class="marquee-chip">AI Workout Plans</span>
+        <span class="marquee-chip">Live Voice Coach</span>
+        <span class="marquee-chip">Snap & Track Meals</span>
+        <span class="marquee-chip">Energy Balance</span>
+        <span class="marquee-chip">873+ Exercises</span>
+        <span class="marquee-chip">Macro Tracking</span>
+        <span class="marquee-chip">Smart Recovery</span>
+        <span class="marquee-chip">Streaks & Badges</span>
+        <span class="marquee-chip">Body Score</span>
+        <span class="marquee-chip">Weight Tracker</span>
+        <span class="marquee-chip">AI Workout Plans</span>
+        <span class="marquee-chip">Live Voice Coach</span>
+        <span class="marquee-chip">Snap & Track Meals</span>
+        <span class="marquee-chip">Energy Balance</span>
+        <span class="marquee-chip">873+ Exercises</span>
+        <span class="marquee-chip">Macro Tracking</span>
+        <span class="marquee-chip">Smart Recovery</span>
+        <span class="marquee-chip">Streaks & Badges</span>
+        <span class="marquee-chip">Body Score</span>
+        <span class="marquee-chip">Weight Tracker</span>
+    </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section class="section" id="features">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-label reveal">What Pulse Does</div>
+            <h2 class="section-title reveal">Everything you need,<br>unified in one app.</h2>
+            <p class="section-sub reveal">Stop paying for 5 separate apps. From AI plans to real-time coaching, Pulse replaces your personal trainer, nutritionist, and tracking apps.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card reveal">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a9 9 0 0 1 9 9c0 3.87-3.13 7-7 7h-1v3a1 1 0 0 1-2 0v-3h-1c-3.87 0-7-3.13-7-7a9 9 0 0 1 9-9z"/><circle cx="9" cy="10" r="1.5" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1.5" fill="currentColor" stroke="none"/></svg></div>
+                <h3 class="feature-title">AI Workout Plans</h3>
+                <p class="feature-desc">AI creates a fully personalized training program that adapts to your body type, goals, equipment, and recovery. Every week, it evolves with you.</p>
+                <div class="feature-tag">Powered by Gemini AI</div>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+                <h3 class="feature-title">Live AI Voice Coach</h3>
+                <p class="feature-desc">Talk to your AI coach in real-time during workouts. Get instant form corrections, rep counting, and vocal motivation — like a world-class trainer in your ear.</p>
+                <div class="feature-tag">Real-time Voice + Vision</div>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+                <h3 class="feature-title">Snap & Track Meals</h3>
+                <p class="feature-desc">Take a photo of any meal — AI instantly breaks down calories, protein, carbs, and fat. Voice log, search our database, or scan barcodes.</p>
+                <div class="feature-tag">AI Food Scanner</div>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+                <h3 class="feature-title">Energy Balance</h3>
+                <p class="feature-desc">See exactly where you stand: calories eaten vs BMR + workout burn. Know instantly if you're in a deficit or surplus with a clear visual breakdown.</p>
+                <div class="feature-tag">BMR + Workout Tracking</div>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                <h3 class="feature-title">Smart Recovery</h3>
+                <p class="feature-desc">AI monitors muscle recovery across 11 body regions so you train hard without overtraining. A visual heatmap shows which muscles are ready to go.</p>
+                <div class="feature-tag">11 Recovery Zones</div>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></div>
+                <h3 class="feature-title">Streaks, Badges & Evolution</h3>
+                <p class="feature-desc">Earn 36 unique badges, build daily streaks, unlock shields at 7/30/100 days, and watch your body score evolve. Gamification that keeps you going.</p>
+                <div class="feature-tag">36 Badges · Body Score</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ STATS ═══ -->
+<section class="section--dark stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="reveal"><div class="stat-val" data-target="873" data-suffix="+">0</div><div class="stat-label">Exercises</div></div>
+            <div class="reveal"><div class="stat-val">AI</div><div class="stat-label">Powered Plans</div></div>
+            <div class="reveal"><div class="stat-val" data-target="36" data-suffix="">0</div><div class="stat-label">Unique Badges</div></div>
+            <div class="reveal"><div class="stat-val">11</div><div class="stat-label">Recovery Zones</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="section section--alt" id="how">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-label reveal">Getting Started</div>
+            <h2 class="section-title reveal">Three steps to your<br>best shape ever.</h2>
+            <p class="section-sub reveal">Getting started takes less than 2 minutes. No equipment required.</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card reveal">
+                <div class="step-num">01</div>
+                <h3 class="step-title">Tell Us About You</h3>
+                <p class="step-desc">Share your goals, fitness level, body metrics, and schedule. The AI learns everything through a quick 13-step onboarding.</p>
+            </div>
+            <div class="step-card reveal">
+                <div class="step-num">02</div>
+                <h3 class="step-title">Get Your AI Plan</h3>
+                <p class="step-desc">In seconds, receive a 7-day workout plan with nutrition targets calculated for your body using Mifflin-St Jeor science.</p>
+            </div>
+            <div class="step-card reveal">
+                <div class="step-num">03</div>
+                <h3 class="step-title">Start Crushing It</h3>
+                <p class="step-desc">Follow your plan with AI voice coaching, snap your meals, track streaks, earn badges, and watch your body evolve.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ WHY PULSE ═══ -->
+<section class="section" id="why">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-label reveal">Why Pulse</div>
+            <h2 class="section-title reveal">World-class coaching,<br>accessible to everyone.</h2>
+            <p class="section-sub reveal">We believe premium fitness coaching shouldn't cost $200/month. Pulse gives you everything a personal trainer offers — powered by AI.</p>
+        </div>
+        <div class="why-grid">
+            <div class="why-card reveal">
+                <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                <h3>Accessible</h3>
+                <p>Premium AI coaching for everyone, regardless of income, location, or experience level.</p>
+            </div>
+            <div class="why-card reveal">
+                <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                <h3>Intelligent</h3>
+                <p>AI that truly understands your body, adapts to your progress, and evolves with you over time.</p>
+            </div>
+            <div class="why-card reveal">
+                <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+                <h3>Complete</h3>
+                <p>Workouts, voice coaching, nutrition, energy balance, recovery, streaks, badges — everything in one place.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ EDUCATION ═══ -->
+<section class="section section--alt" id="learn">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-label reveal">Knowledge</div>
+            <h2 class="section-title reveal">Science-backed<br>fitness education.</h2>
+            <p class="section-sub reveal">Understanding the "why" behind your training is just as important as the training itself.</p>
+        </div>
+        <div class="edu-grid">
+            <div class="edu-card reveal">
+                <div class="edu-num">01</div>
+                <h3>Progressive Overload</h3>
+                <p>The foundation of muscle growth. Gradually increasing weight, reps, or intensity forces your body to adapt. Pulse tracks this automatically.</p>
+            </div>
+            <div class="edu-card reveal">
+                <div class="edu-num">02</div>
+                <h3>Energy Balance Science</h3>
+                <p>Your body burns calories through BMR + exercise. Pulse calculates your exact TDEE using Mifflin-St Jeor formula and shows your deficit or surplus in real time.</p>
+            </div>
+            <div class="edu-card reveal">
+                <div class="edu-num">03</div>
+                <h3>Recovery Science</h3>
+                <p>Muscles grow during rest, not during the workout. Pulse monitors 11 muscle recovery zones so you know when each body part is ready.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="section" id="faq">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-label reveal">FAQ</div>
+            <h2 class="section-title reveal">Your questions,<br>answered.</h2>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item reveal">
+                <div class="faq-q"><span>How much does Pulse cost?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
+                <div class="faq-a"><p>Pulse Pro is $14.99/month or $79.99/year (save 55%). Every subscription starts with a 3-day free trial so you can experience everything risk-free.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-q"><span>How accurate is the AI coaching?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
+                <div class="faq-a"><p>Pulse uses Google's Gemini AI combined with exercise science. The AI considers your body type, goals, experience, schedule, equipment, and recovery to build plans a trainer would charge hundreds for.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-q"><span>Is my data private and secure?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
+                <div class="faq-a"><p>Absolutely. We use end-to-end encryption and never sell your data. Pulse is privacy-first and gives you full control over your information.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-q"><span>Does Pulse work with Apple Health?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
+                <div class="faq-a"><p>Yes! Pulse syncs with Apple Health to import steps, heart rate, sleep, and workouts. It also writes workout summaries and weight entries back to Health.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-q"><span>What makes Pulse different?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
+                <div class="faq-a"><p>Pulse is the only app that combines AI workout planning, real-time voice coaching, smart nutrition with a food scanner, energy balance tracking, muscle recovery heatmap, and gamification with 36 badges — all in one place.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-q"><span>Will Pulse be available on Android?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
+                <div class="faq-a"><p>Yes! Pulse is built cross-platform. Launching first on iOS, with Android following shortly after. Pre-register now to be first in line.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ FINAL CTA ═══ -->
+<section class="section cta-section" id="download">
+    <div class="container">
+        <div class="cta-card">
+            <div class="cta-tag">Launching Soon</div>
+            <h2 class="cta-title">Be the first to<br>transform your fitness.</h2>
+            <p class="cta-desc">Pre-register now and get early access + exclusive launch perks.</p>
+            <a href="#hero" class="cta-btn">
+                Pre-Register Free
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#how-it-works">How It Works</a></li>
-                <li><a href="#why-pulse">Why Pulse</a></li>
-                <li><a href="#faq">FAQ</a></li>
-                <li><a href="#hero" class="nav-cta">Pre-Register</a></li>
+            <div class="cta-checks">
+                <span>✓ Early access</span>
+                <span>✓ Launch day perks</span>
+                <span>✓ iOS & Android</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="logo.jpg" alt="Pulse" class="footer-logo">
+                Pulse
+            </div>
+            <ul class="footer-links">
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="mailto:support@gopulse.health">Contact</a></li>
             </ul>
-            <button class="nav-mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
-                <span></span><span></span><span></span>
-            </button>
+            <div class="footer-copy">&copy; 2026 Pulse. All rights reserved.</div>
         </div>
-    </nav>
+    </div>
+</footer>
 
-    <!-- HERO -->
-    <section class="hero" id="hero">
-        <div class="hero-content">
-            <div class="hero-tag anim-in">PULSE</div>
-            <h1 class="hero-title anim-in">
-                <span class="hero-word" id="cyclingWord">Train Smarter.</span>
-            </h1>
-            <p class="hero-sub anim-in">Your AI-powered fitness & nutrition coach.<br>Launching soon on iOS & Android.</p>
-
-            <!-- PRE-REGISTRATION FORM -->
-            <div class="prereg-wrap anim-in" id="preregWrap">
-                <form id="preregForm" class="prereg-form">
-                    <div class="prereg-input-wrap">
-                        <svg class="prereg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
-                        <input type="email" id="preregEmail" placeholder="Enter your email for early access" required autocomplete="email">
-                    </div>
-                    <button type="submit" class="prereg-btn" id="preregBtn">
-                        <span id="preregBtnText">Get Early Access</span>
-                        <svg class="prereg-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                        <div class="prereg-spinner" id="preregSpinner"></div>
-                    </button>
-                </form>
-                <div class="prereg-meta">
-                    <span class="prereg-free">✓ 100% Free</span>
-                    <span class="prereg-dot">·</span>
-                    <span class="prereg-free">✓ No spam, ever</span>
-                    <span class="prereg-dot">·</span>
-                    <span class="prereg-free">✓ Early access perks</span>
-                </div>
-            </div>
-
-            <!-- SUCCESS STATE -->
-            <div class="prereg-success" id="preregSuccess" style="display:none;">
-                <div class="success-icon">🎉</div>
-                <h3 class="success-title">You're on the list!</h3>
-                <p class="success-sub">We'll notify you the moment Pulse launches.<br>You'll get <strong>early access + exclusive perks</strong>.</p>
-                <div class="success-share">
-                    <span class="success-share-label">Spread the word:</span>
-                    <div class="success-share-btns">
-                        <a href="#" id="shareTwitter" class="share-btn share-twitter" target="_blank">𝕏 Post</a>
-                        <button class="share-btn share-copy" id="shareCopy">Copy Link</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- LIVE COUNTER -->
-            <div class="prereg-counter anim-in" id="preregCounter">
-                <div class="counter-avatars">
-                    <div class="counter-avatar counter-avatar-logo"><img src="logo.jpg" alt="P" class="counter-logo-img"></div>
-                    <div class="counter-avatar" style="background:#3B82F6;">⚡</div>
-                    <div class="counter-avatar" style="background:#22C55E;">💪</div>
-                </div>
-                <span class="counter-text"><strong id="counterNum">0</strong> people pre-registered</span>
-            </div>
-        </div>
-        <div class="hero-image-wrap anim-in">
-            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&q=80" alt="Premium gym" class="hero-image">
-            <div class="hero-image-gradient"></div>
-        </div>
-    </section>
-
-    <!-- MARQUEE -->
-    <section class="marquee-section">
-        <div class="marquee-track">
-            <span class="marquee-chip">AI Workout Plans</span>
-            <span class="marquee-chip">Live Voice Coach</span>
-            <span class="marquee-chip">Snap & Track Meals</span>
-            <span class="marquee-chip">Energy Balance</span>
-            <span class="marquee-chip">873+ Exercises</span>
-            <span class="marquee-chip">Macro Tracking</span>
-            <span class="marquee-chip">Smart Recovery</span>
-            <span class="marquee-chip">Body Score</span>
-            <span class="marquee-chip">Streaks & Badges</span>
-            <span class="marquee-chip">Weight Tracking</span>
-            <!-- Duplicate for seamless loop -->
-            <span class="marquee-chip">AI Workout Plans</span>
-            <span class="marquee-chip">Live Voice Coach</span>
-            <span class="marquee-chip">Snap & Track Meals</span>
-            <span class="marquee-chip">Energy Balance</span>
-            <span class="marquee-chip">873+ Exercises</span>
-            <span class="marquee-chip">Macro Tracking</span>
-            <span class="marquee-chip">Smart Recovery</span>
-            <span class="marquee-chip">Body Score</span>
-            <span class="marquee-chip">Streaks & Badges</span>
-            <span class="marquee-chip">Weight Tracking</span>
-        </div>
-    </section>
-
-    <!-- FEATURES -->
-    <section class="section" id="features">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-label anim-in">What Pulse Does</div>
-                <h2 class="section-title anim-in">Everything you need,<br>unified in one app.</h2>
-                <p class="section-subtitle anim-in">Stop paying for 5 separate apps. From AI plans to real-time coaching, Pulse replaces your personal trainer, nutritionist, and tracking apps.</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card anim-in">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a9 9 0 0 1 9 9c0 3.87-3.13 7-7 7h-1v3a1 1 0 0 1-2 0v-3h-1c-3.87 0-7-3.13-7-7a9 9 0 0 1 9-9z"/><circle cx="9" cy="10" r="1.5" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1.5" fill="currentColor" stroke="none"/></svg>
-                    </div>
-                    <h3 class="feature-title">AI Workout Plans</h3>
-                    <p class="feature-desc">AI creates a fully personalized training program that adapts to your body type, goals, equipment, and recovery. Every week, it evolves with you automatically.</p>
-                    <div class="feature-tag">Powered by Gemini AI</div>
-                </div>
-                <div class="feature-card anim-in">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-                    </div>
-                    <h3 class="feature-title">Live AI Voice Coach</h3>
-                    <p class="feature-desc">Talk to your AI coach in real-time during workouts. Get instant form corrections, rep counting, exercise modifications, and vocal motivation — like a world-class trainer in your ear.</p>
-                    <div class="feature-tag">Real-time Voice + Vision</div>
-                </div>
-                <div class="feature-card anim-in">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                    </div>
-                    <h3 class="feature-title">Snap & Track Meals</h3>
-                    <p class="feature-desc">Take a photo of any meal — AI instantly breaks down calories, protein, carbs, and fat. Voice log, search our database, or scan barcodes. Nutrition tracking made effortless.</p>
-                    <div class="feature-tag">AI Food Scanner</div>
-                </div>
-                <div class="feature-card anim-in">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                    </div>
-                    <h3 class="feature-title">Energy Balance</h3>
-                    <p class="feature-desc">See exactly where you stand: calories eaten vs BMR + workout burn. Know instantly if you're in a deficit or surplus with a clear visual breakdown of your total daily burn.</p>
-                    <div class="feature-tag">BMR + Workout Tracking</div>
-                </div>
-                <div class="feature-card anim-in">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    </div>
-                    <h3 class="feature-title">Smart Recovery</h3>
-                    <p class="feature-desc">AI monitors muscle recovery across 11 body regions so you train hard without overtraining. A visual recovery heatmap shows exactly which muscles are ready to go.</p>
-                    <div class="feature-tag">11 Recovery Zones</div>
-                </div>
-                <div class="feature-card anim-in">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
-                    </div>
-                    <h3 class="feature-title">Streaks, Badges & Evolution</h3>
-                    <p class="feature-desc">Earn 36 unique badges, build daily streaks, unlock shields at 7/30/100 days, and watch your body score evolve. Gamification that keeps you coming back every day.</p>
-                    <div class="feature-tag">36 Badges · Body Score</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- STATS BAR -->
-    <section class="stats-bar">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat anim-in">
-                    <div class="stat-value" data-target="873" data-suffix="+">0</div>
-                    <div class="stat-label">Exercises</div>
-                </div>
-                <div class="stat anim-in">
-                    <div class="stat-value">AI</div>
-                    <div class="stat-label">Powered Plans</div>
-                </div>
-                <div class="stat anim-in">
-                    <div class="stat-value" data-target="36" data-suffix="">0</div>
-                    <div class="stat-label">Unique Badges</div>
-                </div>
-                <div class="stat anim-in">
-                    <div class="stat-value">11</div>
-                    <div class="stat-label">Recovery Zones</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- HOW IT WORKS -->
-    <section class="section section-light" id="how-it-works">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-label anim-in">Getting Started</div>
-                <h2 class="section-title anim-in">Three steps to your<br>best shape ever.</h2>
-                <p class="section-subtitle anim-in">Getting started takes less than 2 minutes. No equipment required.</p>
-            </div>
-            <div class="steps-grid">
-                <div class="step-card anim-in">
-                    <div class="step-num">01</div>
-                    <h3 class="step-title">Tell Us About You</h3>
-                    <p class="step-desc">Share your goals, fitness level, body metrics, and schedule. The AI learns exactly what you need through a quick 13-step onboarding.</p>
-                </div>
-                <div class="step-card anim-in">
-                    <div class="step-num">02</div>
-                    <h3 class="step-title">Get Your AI Plan</h3>
-                    <p class="step-desc">In seconds, receive a fully personalized 7-day workout plan with smart nutrition targets calculated for your exact body using Mifflin-St Jeor science.</p>
-                </div>
-                <div class="step-card anim-in">
-                    <div class="step-num">03</div>
-                    <h3 class="step-title">Start Crushing It</h3>
-                    <p class="step-desc">Follow your plan with AI voice coaching, snap your meals, track your streaks, earn badges, and watch your body score evolve week after week.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- WHY PULSE -->
-    <section class="section" id="why-pulse">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-label anim-in">Why Pulse</div>
-                <h2 class="section-title anim-in">World-class coaching,<br>accessible to everyone.</h2>
-                <p class="section-subtitle anim-in">We believe premium fitness coaching shouldn't cost $200/month. Pulse gives you everything a personal trainer offers — powered by AI.</p>
-            </div>
-            <div class="why-grid">
-                <div class="why-card anim-in">
-                    <div class="why-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    </div>
-                    <h3>Accessible</h3>
-                    <p>Premium AI coaching for everyone, regardless of income, location, or experience level.</p>
-                </div>
-                <div class="why-card anim-in">
-                    <div class="why-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    </div>
-                    <h3>Intelligent</h3>
-                    <p>AI that truly understands your body, adapts to your progress, and evolves with you over time.</p>
-                </div>
-                <div class="why-card anim-in">
-                    <div class="why-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                    </div>
-                    <h3>Complete</h3>
-                    <p>Workout plans, voice coaching, nutrition, energy balance, recovery, streaks, badges — everything in one place.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- EDUCATION -->
-    <section class="section section-light" id="learn">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-label anim-in">Knowledge</div>
-                <h2 class="section-title anim-in">Science-backed<br>fitness education.</h2>
-                <p class="section-subtitle anim-in">Understanding the "why" behind your training is just as important as the training itself.</p>
-            </div>
-            <div class="edu-grid">
-                <div class="edu-card anim-in">
-                    <div class="edu-num">01</div>
-                    <h3>Progressive Overload</h3>
-                    <p>The foundation of muscle growth. Gradually increasing weight, reps, or intensity forces your body to adapt. Pulse tracks this automatically and adjusts your plan.</p>
-                </div>
-                <div class="edu-card anim-in">
-                    <div class="edu-num">02</div>
-                    <h3>Energy Balance Science</h3>
-                    <p>Your body burns calories through BMR (basal metabolic rate) + exercise. Pulse calculates your exact TDEE using Mifflin-St Jeor formula and shows your deficit or surplus in real time.</p>
-                </div>
-                <div class="edu-card anim-in">
-                    <div class="edu-num">03</div>
-                    <h3>Recovery Science</h3>
-                    <p>Muscles grow during rest, not during the workout. Pulse monitors 11 muscle recovery zones so you know exactly when each body part is ready for the next session.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="section" id="faq">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-label anim-in">FAQ</div>
-                <h2 class="section-title anim-in">Your questions,<br>answered.</h2>
-            </div>
-            <div class="faq-list">
-                <div class="faq-item anim-in">
-                    <div class="faq-question"><span>How much does Pulse cost?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
-                    <div class="faq-answer"><p>Pulse Pro is $14.99/month or $79.99/year (save 55%). Every subscription starts with a 3-day free trial so you can experience everything risk-free.</p></div>
-                </div>
-                <div class="faq-item anim-in">
-                    <div class="faq-question"><span>How accurate is the AI coaching?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
-                    <div class="faq-answer"><p>Pulse uses Google's Gemini AI combined with exercise science to create highly personalized plans. The AI considers your body type, goals, experience, schedule, equipment, and recovery to build plans a trainer would charge hundreds for.</p></div>
-                </div>
-                <div class="faq-item anim-in">
-                    <div class="faq-question"><span>Is my data private and secure?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
-                    <div class="faq-answer"><p>Absolutely. We use end-to-end encryption and never sell your data. Pulse is privacy-first and gives you full control over your information.</p></div>
-                </div>
-                <div class="faq-item anim-in">
-                    <div class="faq-question"><span>Does Pulse work with Apple Health?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
-                    <div class="faq-answer"><p>Yes! Pulse syncs with Apple Health to import steps, heart rate, sleep data, and workouts. It also writes workout summaries and weight entries back to Health.</p></div>
-                </div>
-                <div class="faq-item anim-in">
-                    <div class="faq-question"><span>What makes Pulse different from other fitness apps?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
-                    <div class="faq-answer"><p>Pulse is the only app that combines AI workout planning, real-time voice coaching, smart nutrition with a food scanner, energy balance tracking, muscle recovery heatmap, and gamification with 36 badges — all in one place. No other app does all of this.</p></div>
-                </div>
-                <div class="faq-item anim-in">
-                    <div class="faq-question"><span>Will Pulse be available on Android?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
-                    <div class="faq-answer"><p>Yes! Pulse is built with cross-platform technology. Launching first on iOS, with Android following shortly after. Pre-register now to be first in line.</p></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FINAL CTA -->
-    <section class="section download-section" id="download">
-        <div class="container">
-            <div class="download-card">
-                <div class="download-tag">Launching Soon</div>
-                <h2 class="download-title">Be the first to<br>transform your fitness.</h2>
-                <p class="download-desc">Pre-register now and get early access + exclusive launch perks when Pulse drops.</p>
-                <a href="#hero" class="btn-primary btn-large" id="appStoreLink">
-                    Pre-Register Free
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                </a>
-                <div class="download-checks">
-                    <span>✓ Early access</span>
-                    <span>✓ Launch day perks</span>
-                    <span>✓ iOS & Android</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-inner">
-                <div class="footer-brand">
-                    <img src="logo.jpg" alt="Pulse" class="footer-logo-img">
-                    Pulse
-                </div>
-                <ul class="footer-links">
-                    <li><a href="privacy.html">Privacy Policy</a></li>
-                    <li><a href="terms.html">Terms of Service</a></li>
-                    <li><a href="mailto:support@gopulse.health">Contact</a></li>
-                </ul>
-                <div class="footer-copy">&copy; 2026 Pulse. All rights reserved.</div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- CONFETTI CANVAS -->
-    <canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
-
-    <script src="app.js"></script>
+<canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
+<script src="app.js"></script>
 </body>
-
 </html>
