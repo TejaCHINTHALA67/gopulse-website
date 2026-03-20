@@ -15,9 +15,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23000'/><text x='50' y='72' font-size='60' font-weight='900' fill='white' text-anchor='middle' font-family='system-ui'>P</text></svg>">
+    <!-- GSAP + ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
+
+<!-- ═══ PARTICLE CANVAS ═══ -->
+<canvas id="particleCanvas"></canvas>
 
 <!-- ═══ NAV ═══ -->
 <nav class="nav" id="nav">
@@ -28,8 +35,8 @@
         </a>
         <ul class="nav-links" id="navLinks">
             <li><a href="#features">Features</a></li>
+            <li><a href="#showcase">Screenshots</a></li>
             <li><a href="#how">How It Works</a></li>
-            <li><a href="#why">Why Pulse</a></li>
             <li><a href="#faq">FAQ</a></li>
             <li><a href="#hero" class="nav-cta">Pre-Register</a></li>
         </ul>
@@ -41,10 +48,15 @@
 
 <!-- ═══ HERO ═══ -->
 <section class="hero" id="hero">
+    <div class="hero-glow hero-glow--1"></div>
+    <div class="hero-glow hero-glow--2"></div>
+
     <div class="hero-content">
-        <div class="hero-badge"><span class="dot"></span> Launching Soon</div>
-        <h1 class="hero-title">
-            <span class="cycling" id="cycleWord">Train Smarter.</span>
+        <div class="hero-badge"><span class="dot"></span> Available on App Store</div>
+        <h1 class="hero-title" id="heroTitle">
+            <span class="hero-line" id="heroLine1">Train Smarter.</span>
+            <span class="hero-line hero-line--accent" id="heroLine2">Eat Better.</span>
+            <span class="hero-line" id="heroLine3">Live Stronger.</span>
         </h1>
         <p class="hero-sub">Your AI-powered fitness & nutrition coach.<br>Personalized plans. Real-time voice coaching. Snap-to-track meals.</p>
 
@@ -74,7 +86,7 @@
             <h3>You're on the list!</h3>
             <p>We'll notify you the moment Pulse launches.<br>You'll get <strong>early access + exclusive perks</strong>.</p>
             <div class="share-row">
-                <a href="#" id="shareX" class="share-btn dark" target="_blank">𝕏 Post</a>
+                <a href="#" id="shareX" class="share-btn glow" target="_blank">𝕏 Post</a>
                 <button class="share-btn" id="shareCopy">Copy Link</button>
             </div>
         </div>
@@ -83,16 +95,19 @@
         <div class="counter">
             <div class="counter-dots">
                 <div class="counter-dot"><img src="logo.jpg" alt="P"></div>
-                <div class="counter-dot" style="background:#3B82F6;">⚡</div>
-                <div class="counter-dot" style="background:#22C55E;">💪</div>
+                <div class="counter-dot" style="background:linear-gradient(135deg,#06b6d4,#8b5cf6);">⚡</div>
+                <div class="counter-dot" style="background:linear-gradient(135deg,#22c55e,#10b981);">💪</div>
             </div>
             <span class="counter-text"><strong id="counterNum">0</strong> people pre-registered</span>
         </div>
     </div>
 
-    <div class="hero-image-wrap">
-        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&q=80" alt="Premium gym">
-        <div class="gradient"></div>
+    <!-- Hero Phone Preview -->
+    <div class="hero-phone">
+        <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <img src="../App store 6.7/workout page.png" alt="Pulse App" class="phone-screen">
+        </div>
     </div>
 </section>
 
@@ -171,20 +186,136 @@
     </div>
 </section>
 
+<!-- ═══ SCREENSHOT SHOWCASE ═══ -->
+<section class="section showcase-section" id="showcase">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-label reveal">Inside The App</div>
+            <h2 class="section-title reveal">See Pulse in action.</h2>
+            <p class="section-sub reveal">Every screen is designed to help you reach your goals faster.</p>
+        </div>
+    </div>
+
+    <div class="showcase-scroll" id="showcaseScroll">
+        <div class="showcase-track">
+            <div class="showcase-card">
+                <div class="phone-frame phone-frame--showcase">
+                    <div class="phone-notch"></div>
+                    <img src="../App store 6.7/workout page.png" alt="AI Workout Coach" class="phone-screen" loading="lazy">
+                </div>
+                <div class="showcase-info">
+                    <span class="showcase-num">01</span>
+                    <h3>Your AI Workout Coach</h3>
+                    <p>Gym plans, tracking & voice coaching — all powered by AI that adapts to your progress.</p>
+                </div>
+            </div>
+            <div class="showcase-card">
+                <div class="phone-frame phone-frame--showcase">
+                    <div class="phone-notch"></div>
+                    <img src="../App store 6.7/form coach.png" alt="Real-Time Form Coach" class="phone-screen" loading="lazy">
+                </div>
+                <div class="showcase-info">
+                    <span class="showcase-num">02</span>
+                    <h3>Real-Time Form Coach</h3>
+                    <p>AI camera tracks your body and corrects your form in real-time with skeleton overlay.</p>
+                </div>
+            </div>
+            <div class="showcase-card">
+                <div class="phone-frame phone-frame--showcase">
+                    <div class="phone-notch"></div>
+                    <img src="../App store 6.7/scan food.png" alt="Scan Food Instantly" class="phone-screen" loading="lazy">
+                </div>
+                <div class="showcase-info">
+                    <span class="showcase-num">03</span>
+                    <h3>Scan Food Instantly</h3>
+                    <p>Photo, voice or barcode — AI identifies every ingredient and logs macros automatically.</p>
+                </div>
+            </div>
+            <div class="showcase-card">
+                <div class="phone-frame phone-frame--showcase">
+                    <div class="phone-notch"></div>
+                    <img src="../App store 6.7/nutrtion calorie tracking.png" alt="Track Macros Visually" class="phone-screen" loading="lazy">
+                </div>
+                <div class="showcase-info">
+                    <span class="showcase-num">04</span>
+                    <h3>Track Macros Visually</h3>
+                    <p>See where protein fuels your body with the nutrition map and body score system.</p>
+                </div>
+            </div>
+            <div class="showcase-card">
+                <div class="phone-frame phone-frame--showcase">
+                    <div class="phone-notch"></div>
+                    <img src="../App store 6.7/daily meal generate.png" alt="AI Meal Planner" class="phone-screen" loading="lazy">
+                </div>
+                <div class="showcase-info">
+                    <span class="showcase-num">05</span>
+                    <h3>AI Meal Planner</h3>
+                    <p>Custom daily meals matched to your macros — breakfast, lunch, dinner, snacks.</p>
+                </div>
+            </div>
+            <div class="showcase-card">
+                <div class="phone-frame phone-frame--showcase">
+                    <div class="phone-notch"></div>
+                    <img src="../App store 6.7/evolution.png" alt="Your Fitness Score" class="phone-screen" loading="lazy">
+                </div>
+                <div class="showcase-info">
+                    <span class="showcase-num">06</span>
+                    <h3>Your Fitness Score</h3>
+                    <p>Streaks, goals & your evolving body score — track your transformation journey.</p>
+                </div>
+            </div>
+            <div class="showcase-card">
+                <div class="phone-frame phone-frame--showcase">
+                    <div class="phone-notch"></div>
+                    <img src="../App store 6.7/muscle evolution.png" alt="Track Muscle Growth" class="phone-screen" loading="lazy">
+                </div>
+                <div class="showcase-info">
+                    <span class="showcase-num">07</span>
+                    <h3>Track Muscle Growth</h3>
+                    <p>See your progress per muscle group and train smarter with weekly insights.</p>
+                </div>
+            </div>
+            <div class="showcase-card">
+                <div class="phone-frame phone-frame--showcase">
+                    <div class="phone-notch"></div>
+                    <img src="../App store 6.7/daily goals and badges.png" alt="Daily Goals & Rewards" class="phone-screen" loading="lazy">
+                </div>
+                <div class="showcase-info">
+                    <span class="showcase-num">08</span>
+                    <h3>Daily Goals & Rewards</h3>
+                    <p>Build habits, hit goals, earn 36 unique badges and watch your weekly report grow.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ═══ STATS ═══ -->
-<section class="section--dark stats">
+<section class="section stats-section">
     <div class="container">
         <div class="stats-grid">
-            <div class="reveal"><div class="stat-val" data-target="873" data-suffix="+">0</div><div class="stat-label">Exercises</div></div>
-            <div class="reveal"><div class="stat-val">AI</div><div class="stat-label">Powered Plans</div></div>
-            <div class="reveal"><div class="stat-val" data-target="36" data-suffix="">0</div><div class="stat-label">Unique Badges</div></div>
-            <div class="reveal"><div class="stat-val">11</div><div class="stat-label">Recovery Zones</div></div>
+            <div class="stat-card reveal">
+                <div class="stat-val" data-target="873" data-suffix="+">0</div>
+                <div class="stat-label">Exercises</div>
+            </div>
+            <div class="stat-card reveal">
+                <div class="stat-val">AI</div>
+                <div class="stat-label">Powered Plans</div>
+            </div>
+            <div class="stat-card reveal">
+                <div class="stat-val" data-target="36" data-suffix="">0</div>
+                <div class="stat-label">Unique Badges</div>
+            </div>
+            <div class="stat-card reveal">
+                <div class="stat-val">11</div>
+                <div class="stat-label">Recovery Zones</div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- ═══ HOW IT WORKS ═══ -->
-<section class="section section--alt" id="how">
+<section class="section" id="how">
     <div class="container">
         <div class="section-header">
             <div class="section-label reveal">Getting Started</div>
@@ -194,16 +325,19 @@
         <div class="steps-grid">
             <div class="step-card reveal">
                 <div class="step-num">01</div>
+                <div class="step-line"></div>
                 <h3 class="step-title">Tell Us About You</h3>
                 <p class="step-desc">Share your goals, fitness level, body metrics, and schedule. The AI learns everything through a quick 13-step onboarding.</p>
             </div>
             <div class="step-card reveal">
                 <div class="step-num">02</div>
+                <div class="step-line"></div>
                 <h3 class="step-title">Get Your AI Plan</h3>
                 <p class="step-desc">In seconds, receive a 7-day workout plan with nutrition targets calculated for your body using Mifflin-St Jeor science.</p>
             </div>
             <div class="step-card reveal">
                 <div class="step-num">03</div>
+                <div class="step-line"></div>
                 <h3 class="step-title">Start Crushing It</h3>
                 <p class="step-desc">Follow your plan with AI voice coaching, snap your meals, track streaks, earn badges, and watch your body evolve.</p>
             </div>
@@ -221,47 +355,25 @@
         </div>
         <div class="why-grid">
             <div class="why-card reveal">
-                <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                <div class="why-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
                 <h3>Accessible</h3>
                 <p>Premium AI coaching for everyone, regardless of income, location, or experience level.</p>
             </div>
             <div class="why-card reveal">
-                <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                <div class="why-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
                 <h3>Intelligent</h3>
                 <p>AI that truly understands your body, adapts to your progress, and evolves with you over time.</p>
             </div>
             <div class="why-card reveal">
-                <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+                <div class="why-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                </div>
                 <h3>Complete</h3>
                 <p>Workouts, voice coaching, nutrition, energy balance, recovery, streaks, badges — everything in one place.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ═══ EDUCATION ═══ -->
-<section class="section section--alt" id="learn">
-    <div class="container">
-        <div class="section-header">
-            <div class="section-label reveal">Knowledge</div>
-            <h2 class="section-title reveal">Science-backed<br>fitness education.</h2>
-            <p class="section-sub reveal">Understanding the "why" behind your training is just as important as the training itself.</p>
-        </div>
-        <div class="edu-grid">
-            <div class="edu-card reveal">
-                <div class="edu-num">01</div>
-                <h3>Progressive Overload</h3>
-                <p>The foundation of muscle growth. Gradually increasing weight, reps, or intensity forces your body to adapt. Pulse tracks this automatically.</p>
-            </div>
-            <div class="edu-card reveal">
-                <div class="edu-num">02</div>
-                <h3>Energy Balance Science</h3>
-                <p>Your body burns calories through BMR + exercise. Pulse calculates your exact TDEE using Mifflin-St Jeor formula and shows your deficit or surplus in real time.</p>
-            </div>
-            <div class="edu-card reveal">
-                <div class="edu-num">03</div>
-                <h3>Recovery Science</h3>
-                <p>Muscles grow during rest, not during the workout. Pulse monitors 11 muscle recovery zones so you know when each body part is ready.</p>
             </div>
         </div>
     </div>
@@ -306,8 +418,9 @@
 <!-- ═══ FINAL CTA ═══ -->
 <section class="section cta-section" id="download">
     <div class="container">
-        <div class="cta-card">
-            <div class="cta-tag">Launching Soon</div>
+        <div class="cta-card reveal">
+            <div class="cta-glow"></div>
+            <div class="cta-tag">Available Now</div>
             <h2 class="cta-title">Be the first to<br>transform your fitness.</h2>
             <p class="cta-desc">Pre-register now and get early access + exclusive launch perks.</p>
             <a href="#hero" class="cta-btn">
