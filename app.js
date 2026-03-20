@@ -1,6 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════
    PULSE — Website JS 2026
-   GSAP animations, Supabase pre-registration, particles, confetti
+   GSAP scroll animations, Supabase pre-registration
+   Apple-style clean, purposeful motion
    ═══════════════════════════════════════════════════════════════ */
 
 // ─── Supabase ────────────────────────────────────────────────
@@ -22,87 +23,22 @@ const success = $('#preregSuccess');
 const emailInput = $('#preregEmail');
 const counterEl = $('#counterNum');
 
-// ─── Particle Background ────────────────────────────────────
-function initParticles() {
-    const canvas = document.getElementById('particleCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let w, h, particles;
-
-    function resize() {
-        w = canvas.width = innerWidth;
-        h = canvas.height = innerHeight;
-    }
-
-    function createParticles() {
-        particles = [];
-        const count = Math.min(60, Math.floor(w * h / 20000));
-        for (let i = 0; i < count; i++) {
-            particles.push({
-                x: Math.random() * w,
-                y: Math.random() * h,
-                vx: (Math.random() - 0.5) * 0.3,
-                vy: (Math.random() - 0.5) * 0.3,
-                r: Math.random() * 1.5 + 0.5,
-                o: Math.random() * 0.3 + 0.1,
-            });
-        }
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, w, h);
-        particles.forEach(p => {
-            p.x += p.vx; p.y += p.vy;
-            if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
-            if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(6,182,212,${p.o})`;
-            ctx.fill();
-        });
-
-        // Draw lines between nearby particles
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 150) {
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(6,182,212,${0.04 * (1 - dist / 150)})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
-                }
-            }
-        }
-        requestAnimationFrame(draw);
-    }
-
-    resize();
-    createParticles();
-    draw();
-    window.addEventListener('resize', () => { resize(); createParticles(); });
-}
-
 // ─── GSAP Animations ─────────────────────────────────────────
 function initGSAP() {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-        // Fallback: just reveal everything
         $$('.reveal').forEach(el => el.classList.add('visible'));
         return;
     }
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Reveal on scroll
-    $$('.reveal').forEach((el, i) => {
+    // Gentle reveal on scroll — Apple-style subtlety
+    $$('.reveal').forEach(el => {
         gsap.fromTo(el,
-            { opacity: 0, y: 50 },
+            { opacity: 0, y: 40 },
             {
-                opacity: 1, y: 0, duration: 0.8,
-                ease: 'power3.out',
+                opacity: 1, y: 0, duration: 1,
+                ease: 'power2.out',
                 scrollTrigger: {
                     trigger: el,
                     start: 'top 88%',
@@ -114,103 +50,76 @@ function initGSAP() {
 
     // Feature cards stagger
     gsap.fromTo('.feature-card',
-        { opacity: 0, y: 60, scale: 0.95 },
+        { opacity: 0, y: 50 },
         {
-            opacity: 1, y: 0, scale: 1, duration: 0.7,
-            stagger: 0.1, ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '.features-grid',
-                start: 'top 80%',
-            }
+            opacity: 1, y: 0, duration: 0.8,
+            stagger: 0.08, ease: 'power2.out',
+            scrollTrigger: { trigger: '.features-grid', start: 'top 82%' }
         }
     );
 
     // Step cards stagger
     gsap.fromTo('.step-card',
-        { opacity: 0, y: 60 },
+        { opacity: 0, y: 50 },
         {
-            opacity: 1, y: 0, duration: 0.7,
-            stagger: 0.15, ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '.steps-grid',
-                start: 'top 80%',
-            }
+            opacity: 1, y: 0, duration: 0.8,
+            stagger: 0.12, ease: 'power2.out',
+            scrollTrigger: { trigger: '.steps-grid', start: 'top 82%' }
         }
     );
 
-    // Why cards stagger
-    gsap.fromTo('.why-card',
-        { opacity: 0, y: 50, scale: 0.95 },
-        {
-            opacity: 1, y: 0, scale: 1, duration: 0.7,
-            stagger: 0.12, ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '.why-grid',
-                start: 'top 80%',
+    // Showcase images — fade + scale up cleanly
+    $$('.showcase-image').forEach(img => {
+        gsap.fromTo(img,
+            { opacity: 0, y: 60, scale: 0.92 },
+            {
+                opacity: 1, y: 0, scale: 1, duration: 1.1,
+                ease: 'power2.out',
+                scrollTrigger: { trigger: img, start: 'top 85%' }
             }
-        }
-    );
+        );
+    });
 
-    // Showcase cards stagger
-    gsap.fromTo('.showcase-card',
-        { opacity: 0, y: 80, scale: 0.9 },
-        {
-            opacity: 1, y: 0, scale: 1, duration: 0.8,
-            stagger: 0.12, ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '.showcase-scroll',
-                start: 'top 85%',
+    // Showcase text — subtle slide
+    $$('.showcase-text').forEach(txt => {
+        gsap.fromTo(txt,
+            { opacity: 0, y: 40 },
+            {
+                opacity: 1, y: 0, duration: 0.9,
+                ease: 'power2.out',
+                scrollTrigger: { trigger: txt, start: 'top 85%' }
             }
-        }
-    );
+        );
+    });
 
     // Stat cards
     gsap.fromTo('.stat-card',
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 30 },
         {
-            opacity: 1, y: 0, duration: 0.6,
-            stagger: 0.1, ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '.stats-grid',
-                start: 'top 85%',
-            }
+            opacity: 1, y: 0, duration: 0.7,
+            stagger: 0.1, ease: 'power2.out',
+            scrollTrigger: { trigger: '.stats-grid', start: 'top 85%' }
         }
     );
 
     // CTA card
     gsap.fromTo('.cta-card',
-        { opacity: 0, y: 60, scale: 0.97 },
+        { opacity: 0, y: 50 },
         {
-            opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '.cta-section',
-                start: 'top 80%',
-            }
+            opacity: 1, y: 0, duration: 1, ease: 'power2.out',
+            scrollTrigger: { trigger: '.cta-section', start: 'top 80%' }
         }
     );
 
-    // FAQ items stagger
+    // FAQ items
     gsap.fromTo('.faq-item',
-        { opacity: 0, x: -30 },
+        { opacity: 0, x: -20 },
         {
             opacity: 1, x: 0, duration: 0.5,
-            stagger: 0.08, ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '.faq-list',
-                start: 'top 80%',
-            }
+            stagger: 0.06, ease: 'power2.out',
+            scrollTrigger: { trigger: '.faq-list', start: 'top 82%' }
         }
     );
-
-    // Parallax glows
-    gsap.to('.hero-glow--1', {
-        y: 100, ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 }
-    });
-    gsap.to('.hero-glow--2', {
-        y: -80, ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 }
-    });
 }
 
 // ─── Stat Counter Animation ──────────────────────────────────
@@ -222,7 +131,7 @@ function initStatCounters() {
             const t = parseInt(el.dataset.target);
             const s = el.dataset.suffix || '';
             if (isNaN(t)) return;
-            const dur = 1600, t0 = performance.now();
+            const dur = 1800, t0 = performance.now();
             (function tick(now) {
                 const p = Math.min((now - t0) / dur, 1);
                 el.textContent = Math.round(t * (1 - Math.pow(1 - p, 3))) + s;
@@ -250,20 +159,16 @@ function initHeroCycle() {
     setInterval(() => {
         cycle = (cycle + 1) % lines.length;
         [el1, el2, el3].forEach((el, i) => {
-            el.style.transition = 'opacity 0.3s, transform 0.3s';
+            el.style.transition = 'opacity 0.4s, transform 0.4s';
             el.style.opacity = '0';
-            el.style.transform = 'translateY(10px)';
+            el.style.transform = 'translateY(8px)';
             setTimeout(() => {
                 el.textContent = lines[cycle][i];
                 el.style.opacity = '1';
                 el.style.transform = 'translateY(0)';
-                // Re-apply gradient to accent line
-                if (i === 1) {
-                    el.classList.add('hero-line--accent');
-                }
-            }, 300 + i * 80);
+            }, 350 + i * 60);
         });
-    }, 4000);
+    }, 4500);
 }
 
 // ─── Load Count ──────────────────────────────────────────────
@@ -339,24 +244,24 @@ if (copyBtn) copyBtn.addEventListener('click', () => {
     });
 });
 
-// ─── Confetti ────────────────────────────────────────────────
+// ─── Confetti (monochrome) ───────────────────────────────────
 function confetti() {
     const c = document.getElementById('confettiCanvas');
     if (!c) return;
     const ctx = c.getContext('2d');
     c.width = innerWidth; c.height = innerHeight;
 
-    const cols = ['#06b6d4','#8b5cf6','#22c55e','#f59e0b','#ef4444','#ec4899','#fff'];
-    const p = Array.from({ length: 150 }, () => ({
+    const cols = ['#000','#333','#666','#999','#ccc','#fff'];
+    const p = Array.from({ length: 120 }, () => ({
         x: c.width / 2 + (Math.random() - 0.5) * 300,
         y: c.height * 0.4,
-        vx: (Math.random() - 0.5) * 20,
-        vy: -Math.random() * 18 - 6,
-        w: Math.random() * 8 + 4,
-        h: Math.random() * 5 + 3,
+        vx: (Math.random() - 0.5) * 18,
+        vy: -Math.random() * 16 - 5,
+        w: Math.random() * 7 + 3,
+        h: Math.random() * 4 + 2,
         col: cols[Math.random() * cols.length | 0],
         rot: Math.random() * 360,
-        rs: (Math.random() - 0.5) * 14,
+        rs: (Math.random() - 0.5) * 12,
         g: 0.35 + Math.random() * 0.2,
         o: 1,
     }));
@@ -367,7 +272,7 @@ function confetti() {
         let alive = false;
         p.forEach(i => {
             i.vy += i.g; i.x += i.vx; i.y += i.vy; i.rot += i.rs; i.vx *= 0.99;
-            if (f > 35) i.o -= 0.014;
+            if (f > 30) i.o -= 0.016;
             if (i.o <= 0) return;
             alive = true;
             ctx.save();
@@ -379,14 +284,14 @@ function confetti() {
             ctx.restore();
         });
         f++;
-        if (alive && f < 160) requestAnimationFrame(draw);
+        if (alive && f < 150) requestAnimationFrame(draw);
         else ctx.clearRect(0, 0, c.width, c.height);
     })();
 }
 
 // ─── Nav Scroll ──────────────────────────────────────────────
 const nav = document.getElementById('nav');
-addEventListener('scroll', () => { if (nav) nav.classList.toggle('scrolled', scrollY > 60); });
+addEventListener('scroll', () => { if (nav) nav.classList.toggle('scrolled', scrollY > 40); });
 
 // ─── Mobile Menu ─────────────────────────────────────────────
 const hb = document.getElementById('hamburger');
@@ -419,23 +324,19 @@ $$('a[href^="#"]').forEach(a => {
 
 // ─── Init ────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    initParticles();
     initStatCounters();
     initHeroCycle();
     loadCount();
 
-    // Wait for GSAP to load (it's deferred)
     if (typeof gsap !== 'undefined') {
         initGSAP();
     } else {
-        // GSAP loads deferred — wait a bit
         const checkGSAP = setInterval(() => {
             if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
                 clearInterval(checkGSAP);
                 initGSAP();
             }
         }, 100);
-        // Timeout fallback: just reveal everything
         setTimeout(() => {
             clearInterval(checkGSAP);
             if (typeof gsap === 'undefined') {
