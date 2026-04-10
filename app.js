@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   PULSE — Premium Landing Page JS 2026
+   SPOTTR — Premium Landing Page JS 2026
    GSAP scroll animations · Hero cycling · Stats · FAQ
    No Supabase — app is live, CTAs link to App Store
    ═══════════════════════════════════════════════════════════════ */
